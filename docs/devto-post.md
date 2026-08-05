@@ -199,7 +199,7 @@ The one thing the dashboard will never do is show you a stale sky as if it were 
 ## Try it
 
 ```bash
-git clone <repo>
+git clone https://github.com/monsad/collective-sky
 cd collective-sky
 cp .env.example .env
 docker compose up
