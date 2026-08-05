@@ -1,0 +1,26 @@
+{
+  "name": "collective-sky-indexer",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "start": "node --experimental-strip-types src/main.ts",
+    "smoke": "node --experimental-strip-types --input-type=module -e \"import('./src/watch.ts').then(()=>console.log('modules load OK')).catch(e=>{console.error(e.message);process.exit(1)})\""
+  },
+  "dependencies": {
+    "@metaplex-foundation/mpl-core": "^1.1.1",
+    "@metaplex-foundation/umi": "^1.0.0",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.0.0",
+    "@solana/web3.js": "^1.95.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collective Sky</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2rem 1.25rem 4rem;
+    background: radial-gradient(ellipse at top, #131a35 0%, #05060f 60%);
+    color: #e8ecff; font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+  main { max-width: 62rem; margin: 0 auto; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 .3rem; letter-spacing: -.02em; }
+  .sub { color: #8a93b8; margin: 0 0 2.5rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1rem; }
+  .stat { background: #ffffff08; border: 1px solid #ffffff14; border-radius: .8rem; padding: 1rem; }
+  .stat b { display: block; font-size: 1.9rem; font-variant-numeric: tabular-nums; }
+  .stat span { color: #8a93b8; font-size: .82rem; text-transform: uppercase; letter-spacing: .06em; }
+  section { margin-top: 3rem; }
+  h2 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: .09em; color: #8a93b8; }
+  .sky {
+    position: relative; aspect-ratio: 16/9; margin-top: 1rem;
+    background: #05060f; border: 1px solid #ffffff14; border-radius: .8rem; overflow: hidden;
+  }
+  .star {
+    position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
+    border-radius: 50%; background: #5ee7ff; box-shadow: 0 0 12px #5ee7ff99; text-decoration: none;
+  }
+  .star.proof { background: #e05cff; box-shadow: 0 0 12px #e05cff99; }
+  .stale {
+    background: #ff6b6b1a; border: 1px solid #ff6b6b55; border-radius: .8rem;
+    padding: .9rem 1.2rem; margin-bottom: 2rem; color: #ffb3b3;
+  }
+  .empty { text-align: center; padding: 3.5rem 1rem; color: #8a93b8; }
+  .empty a { color: #5ee7ff; }
+  .report { background: #ffffff08; border: 1px solid #ffffff14; border-radius: .8rem; padding: 1.25rem 1.5rem; }
+  .report p { margin: 0 0 .75rem; }
+  .meta { color: #6d7699; font-size: .8rem; }
+  .themes { display: flex; flex-wrap: wrap; gap: .6rem; padding: 0; list-style: none; }
+  .themes li { background: #ffffff0d; border: 1px solid #ffffff1a; border-radius: 2rem; padding: .35rem .9rem; }
+  .themes b { color: #5ee7ff; }
+  footer { margin-top: 3.5rem; color: #6d7699; font-size: .85rem; }
+  a { color: #9fb4ff; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Collective Sky</h1>
+  <p class="sub">
+    Rebuilt from Solana devnet alone. This page never contacts
+    <a href="{{ stellamint_url }}">stellamint.vercel.app</a> &mdash; every number below was
+    decoded from an on-chain asset.
+  </p>
+
+  {% if chain_stale %}
+    <p class="stale">
+      <strong>Chain unreachable.</strong> The indexer has not been able to read devnet
+      recently, so this page shows the last state it saw &mdash; not the sky as it is now.
+    </p>
+  {% endif %}
+
+  <div class="stats">
+    <div class="stat"><b>{{ light_years }}</b><span>light-years sent</span></div>
+    <div class="stat"><b>{{ message_count }}</b><span>messages</span></div>
+    <div class="stat"><b>{{ proof_count }}</b><span>proofs of sky</span></div>
+    <div class="stat"><b>{{ unknown_targets }}</b><span>targets we can't resolve</span></div>
+  </div>
+
+  <section>
+    <h2>The sky</h2>
+    {% if assets %}
+      <div class="sky">
+        {% for a in assets %}
+          <a class="star {{ a.kind }}" style="left: {{ a.x }}%; top: {{ a.y }}%"
+             title="{{ a.label }} — {{ a.detail }}"
+             href="https://explorer.solana.com/address/{{ a.id }}?cluster=devnet">
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="sky">
+        <p class="empty">
+          No one has looked up yet.<br>
+          This sky fills itself the moment someone mints on
+          <a href="{{ stellamint_url }}">StellaMint</a> &mdash; be the first.
+        </p>
+      </div>
+    {% endif %}
+  </section>
+
+  {% if themes %}
+  <section>
+    <h2>What we write to the stars</h2>
+    <ul class="themes">
+      {% for t in themes %}<li><b>{{ t.label }}</b> &middot; {{ t.size }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if report %}
+  <section>
+    <h2>Tonight's report</h2>
+    <div class="report">
+      <p>{{ report.body }}</p>
+      <p class="meta">
+        Written locally by {{ report.model }} at {{ report.created_at }}, from decoded
+        chain facts only &mdash; the model has no network and never sees the chain.
+      </p>
+    </div>
+  </section>
+  {% endif %}
+
+  <footer>
+    Read the story behind the data:
+    <a href="{{ article_url }}">StellaMint &mdash; a message to the stars</a>.
+    Devnet only; nothing here costs real money.
+  </footer>
+</main>
+</body>
+</html>

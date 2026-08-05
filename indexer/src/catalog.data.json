@@ -1,0 +1,14 @@
+[
+  { "id": "proxima-centauri-b", "name": "Proxima Centauri b", "hostStar": "Proxima Centauri", "distanceLy": 4.2465, "constellation": "Centaurus" },
+  { "id": "alpha-centauri", "name": "Alpha Centauri (system)", "hostStar": "Alpha Centauri A/B", "distanceLy": 4.37, "constellation": "Centaurus" },
+  { "id": "barnards-star-b", "name": "Barnard's Star b", "hostStar": "Barnard's Star", "distanceLy": 5.96, "constellation": "Ophiuchus" },
+  { "id": "wolf-1061-c", "name": "Wolf 1061 c", "hostStar": "Wolf 1061", "distanceLy": 13.8, "constellation": "Ophiuchus" },
+  { "id": "trappist-1e", "name": "TRAPPIST-1 e", "hostStar": "TRAPPIST-1", "distanceLy": 40.7, "constellation": "Aquarius" },
+  { "id": "trappist-1d", "name": "TRAPPIST-1 d", "hostStar": "TRAPPIST-1", "distanceLy": 40.7, "constellation": "Aquarius" },
+  { "id": "gliese-667-cc", "name": "Gliese 667 Cc", "hostStar": "Gliese 667 C", "distanceLy": 23.6, "constellation": "Scorpius" },
+  { "id": "kepler-442b", "name": "Kepler-442 b", "hostStar": "Kepler-442", "distanceLy": 1206, "constellation": "Lyra" },
+  { "id": "kepler-186f", "name": "Kepler-186 f", "hostStar": "Kepler-186", "distanceLy": 579, "constellation": "Cygnus" },
+  { "id": "k2-18b", "name": "K2-18 b", "hostStar": "K2-18", "distanceLy": 124, "constellation": "Leo" },
+  { "id": "teegarden-b", "name": "Teegarden's Star b", "hostStar": "Teegarden's Star", "distanceLy": 12.5, "constellation": "Aries" },
+  { "id": "ross-128-b", "name": "Ross 128 b", "hostStar": "Ross 128", "distanceLy": 11.0, "constellation": "Virgo" }
+]

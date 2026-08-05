@@ -1,0 +1,73 @@
+name: collective-sky
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: sky
+      POSTGRES_PASSWORD: sky
+      POSTGRES_DB: collective_sky
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sky -d collective_sky"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  indexer:
+    build: ./indexer
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SOLANA_RPC: ${SOLANA_RPC:-https://api.devnet.solana.com}
+      SOLANA_WS: ${SOLANA_WS:-wss://api.devnet.solana.com}
+      DATABASE_URL: postgres://sky:sky@postgres:5432/collective_sky
+      LIVE: ${LIVE:-1}
+      SWEEP_INTERVAL_MS: ${SWEEP_INTERVAL_MS:-300000}
+      MAX_TX_PER_MIN: ${MAX_TX_PER_MIN:-120}
+      SWEEP_BATCH: ${SWEEP_BATCH:-200}
+    restart: unless-stopped
+
+  narrator:
+    build: ./py
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://sky:sky@postgres:5432/collective_sky
+      NARRATE_INTERVAL_MS: ${NARRATE_INTERVAL_MS:-900000}
+      REPORT_WINDOW_HOURS: ${REPORT_WINDOW_HOURS:-24}
+      MIN_MESSAGES_FOR_THEMES: ${MIN_MESSAGES_FOR_THEMES:-8}
+    models:
+      chat:
+        endpoint_var: CHAT_URL
+        model_var: CHAT_MODEL
+      embed:
+        endpoint_var: EMBED_URL
+        model_var: EMBED_MODEL
+    restart: unless-stopped
+
+  web:
+    build: ./py
+    command: ["uvicorn", "collective_sky.web:app", "--host", "0.0.0.0", "--port", "8000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://sky:sky@postgres:5432/collective_sky
+      SWEEP_INTERVAL_MS: ${SWEEP_INTERVAL_MS:-300000}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+models:
+  chat:
+    model: ${CHAT_MODEL_TAG:-ai/qwen3}
+  embed:
+    model: ${EMBED_MODEL_TAG:-ai/qwen3-embedding:0.6B-F16}
+
+volumes:
+  pgdata:
